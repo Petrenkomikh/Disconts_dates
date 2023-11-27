@@ -7,17 +7,19 @@
 	$count_year = 2019; //указанный год (Если за прошедшее число лет было больше...)
 	
 	//переменная для подсчета каких акционных дней больше
-    $count_table = $count_stool = 0;
+	$count_table = $count_stool = 0;
 	
-    // Создаем объект для текущей даты - верно!
-    $date = new DateTime();
+	// Создаем объект для текущей даты - верно!
+	$date = new DateTime();
     
-    // Установка начальной даты в 2000-01-01
-    $date->setDate(2000, 1, 1);
+	// Установка начальной даты в 2000-01-01
+	$date->setDate(2000, 1, 1);
 	
-	function stool() //если больше для столов
+	// Заполняем акционными датами до указанного года
+	while ($date->format('Y') <= $count_year)
 	{
-		$date->modify('first friday of this month');
+       		$date->modify('first friday of this month');
+       		$month = $date->format('n');
 
 		if ($month % 2 == 0)
 		{
@@ -31,41 +33,11 @@
 				$dis_date[] = $date->format('d-е M. Y');
 			}
 		}	
-        //echo $date->format('d-е M. Y')." "; //в ряд (если нужно в столбик то "/n" )
+		//echo $date->format('d-е M. Y')." "; //в ряд (если нужно в столбик то "/n" )
 		
-        // Переходим к следующему месяцу
-        $date->modify('next month');
-	}
-	
-	function table() //если больше для стульев
-	{
-		$date->modify('first friday of this month');
-
-		$end_date = $date->format('Y'); //Для определения последнего года, точка отсчета на будущее
-		if ($month % 2 == 0)
-		{
-			$count_table += 1;
-			if($date->format('Y') <= $year) //для вывода акционных дат для столов
-			{	
-				$dis_date[] = $date->format('d-е M. Y');
-			}
-		}
-		else
-		{
-			$count_stool += 1;
-		}	
-        //echo $date->format('d-е M. Y')." "; //в ряд (если нужно в столбик то "/n" )
-		
-        // Переходим к следующему месяцу
-        $date->modify('next month');
-	}
-	
-	
-	// Заполняем акционными датами до указанного года
-    while ($date->format('Y') <= $count_year)
-	{
-       stool();
-    }
+        	// Переходим к следующему месяцу
+        	$date->modify('next month');
+    	}
 
 	// Заполняем акционными датами, пока счет не сравняется (по заданию)
 	while ($count_table != $count_stool)
@@ -75,20 +47,56 @@
 		{
 			while($count_year <= $next_year) //цикл для равного счета 
 			{
-				table();
+				$date->modify('first friday of this month');
+				$month = $date->format('n');
+
+        		$end_date = $date->format('Y'); //Для определения последнего года, точка отсчета на будущее
+        		if ($month % 2 == 0)
+        		{
+        			$count_table += 1;
+        			if($date->format('Y') <= $year) //для вывода акционных дат для столов
+        			{	
+        				$dis_date[] = $date->format('d-е M. Y');
+        			}
+        		}
+        		else
+        		{
+        			$count_stool += 1;
+        		}	
+                //echo $date->format('d-е M. Y')." "; //в ряд (если нужно в столбик то "/n" )
+        		
+                // Переходим к следующему месяцу
+                $date->modify('next month');
 			}
 		}
 		else
 		{
 			while($count_year <= $next_year) //цикл для равного счета 
 			{
-				stool();
+				$date->modify('first friday of this month');
+				$month = $date->format('n');
+        
+        		if ($month % 2 == 0)
+        		{
+        			$count_stool += 1;
+        		}
+        		else
+        		{
+        			$count_table += 1;
+        			if($date->format('Y') <= $year)//для вывода акционных дат для столов
+        			{	
+        				$dis_date[] = $date->format('d-е M. Y');
+        			}
+        		}	
+                //echo $date->format('d-е M. Y')." "; //в ряд (если нужно в столбик то "/n" )
+        		
+                // Переходим к следующему месяцу
+                $date->modify('next month');
 			}
 		}
 	}
 	
-	print_r($dis_date) //вывод всех акционных дат для столов (по заданию)
-	//если функции не принимаются, то вместо функции, поставить код - при случае сбоев.
+	print_r($dis_date);
 	
 /*	
 <?php
